@@ -68,7 +68,7 @@ export default function HomePage() {
             className="w-full h-48 sm:h-56 object-cover rounded-lg shadow-lg hover:scale-105 transition"
           />
           <Image
-            src="/image/6.jpg"
+            src="/image/62.jfif"
             alt="Monstera"
             width={500}
             height={400}
