@@ -68,14 +68,14 @@ export default function HomePage() {
             className="w-full h-48 sm:h-56 object-cover rounded-lg shadow-lg hover:scale-105 transition"
           />
           <Image
-            src="/image/62.jfif"
+            src="/image/7.jpg"
             alt="Monstera"
             width={500}
             height={400}
             className="w-full h-48 sm:h-56 object-cover rounded-lg shadow-lg hover:scale-105 transition"
           />
           <Image
-            src="/image/7.jpg"
+            src="/image/j.jpg"
             alt="Flowering Plant"
             width={500}
             height={400}
@@ -112,14 +112,14 @@ export default function HomePage() {
             {/* Card 1 */}
             <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden">
               <Image
-                src="/image/7.jpg"
+                src="/image/alovera.jpg"
                 alt="Aloe Vera"
                 width={500}
                 height={400}
                 className="w-full h-48 sm:h-56 object-cover"
               />
               <div className="p-4 sm:p-6">
-                <h3 className="font-semibold text-lg sm:text-xl mb-2">Aloe Vera</h3>
+                <h3 className="font-semibold text-gray-400 text-lg sm:text-xl mb-2">Aloe Vera</h3>
                 <p className="text-gray-600 text-sm sm:text-base">
                   Easy to care succulent for indoor and outdoor decoration.
                 </p>
@@ -129,14 +129,14 @@ export default function HomePage() {
             {/* Card 2 */}
             <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden">
               <Image
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVbKQxqi0Z5yH_5i5TZBvch1As9pSKSntPdA&s"
+                src="/image/fie.jpg"
                 alt="Fiddle Leaf Fig"
                 width={500}
                 height={400}
                 className="w-full h-48 sm:h-56 object-cover"
               />
               <div className="p-4 sm:p-6">
-                <h3 className="font-semibold text-lg sm:text-xl mb-2">
+                <h3 className="font-semibold text-gray-400 text-lg sm:text-xl mb-2">
                   Fiddle Leaf Fig
                 </h3>
                 <p className="text-gray-600 text-sm sm:text-base">
@@ -148,14 +148,14 @@ export default function HomePage() {
             {/* Card 3 */}
             <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden">
               <Image
-                src="/image/7.jpg"
+                src="/image/pc.webp"
                 alt="Peace Lily"
                 width={500}
                 height={400}
                 className="w-full h-48 sm:h-56 object-cover"
               />
               <div className="p-4 sm:p-6">
-                <h3 className="font-semibold text-lg sm:text-xl mb-2">Peace Lily</h3>
+                <h3 className="font-semibold text-gray-400 text-lg sm:text-xl mb-2">Peace Lily</h3>
                 <p className="text-gray-600 text-sm sm:text-base">
                   Elegant flowering plant for a refreshing environment.
                 </p>
