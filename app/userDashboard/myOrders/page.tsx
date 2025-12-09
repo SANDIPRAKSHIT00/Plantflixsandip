@@ -49,7 +49,7 @@ export default function MyOrdersPage() {
     }
   };
 
-  // Fetch Orders (FIX: useCallback to remove warning)
+  // Fetch Orders
   const fetchOrders = useCallback(async () => {
     const { data: userData } = await supabase.auth.getUser();
     if (!userData?.user) return;
@@ -107,8 +107,32 @@ export default function MyOrdersPage() {
     };
   }, [fetchOrders]);
 
+  // Cancel Order
+  const handleCancelOrder = async (orderId: string) => {
+    const confirmCancel = confirm(
+      "Are you sure you want to cancel this order?"
+    );
+    if (!confirmCancel) return;
+
+    const { error } = await supabase
+      .from("orders")
+      .update({ status: "cancelled" })
+      .eq("id", orderId);
+
+    if (error) {
+      alert("Failed to cancel order");
+      console.error(error);
+    }
+  };
+
   // Order status list
-  const statuses = ["order placed", "confirmed", "processing", "shipped", "delivered"];
+  const statuses = [
+    "order placed",
+    "confirmed",
+    "processing",
+    "shipped",
+    "delivered",
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -141,7 +165,9 @@ export default function MyOrdersPage() {
       <>
         <Navbar />
         <div className="flex justify-center items-center h-screen">
-          <p className="text-gray-500 dark:text-gray-400">No orders found.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            No orders found.
+          </p>
         </div>
       </>
     );
@@ -156,7 +182,9 @@ export default function MyOrdersPage() {
 
         <div className="space-y-8 max-w-5xl mx-auto">
           {orders.map((order) => {
-            const currentStep = statuses.indexOf(order.status.toLowerCase());
+            const currentStep = statuses.indexOf(
+              order.status.toLowerCase()
+            );
             const isExpanded = expandedOrderId === order.id;
 
             return (
@@ -171,16 +199,33 @@ export default function MyOrdersPage() {
                       Order ID: {order.id}
                     </p>
 
-                    <button
-                      onClick={() =>
-                        setExpandedOrderId(isExpanded ? null : order.id)
-                      }
-                      className={`text-xs sm:text-sm text-white px-3 py-1 rounded-full ${getStatusColor(
-                        order.status
-                      )}`}
-                    >
-                      {order.status.toUpperCase()}
-                    </button>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() =>
+                          setExpandedOrderId(
+                            isExpanded ? null : order.id
+                          )
+                        }
+                        className={`text-xs sm:text-sm text-white px-3 py-1 rounded-full ${getStatusColor(
+                          order.status
+                        )}`}
+                      >
+                        {order.status.toUpperCase()}
+                      </button>
+
+                      {!["shipped", "delivered", "cancelled"].includes(
+                        order.status.toLowerCase()
+                      ) && (
+                        <button
+                          onClick={() =>
+                            handleCancelOrder(order.id)
+                          }
+                          className="text-xs sm:text-sm px-3 py-1 rounded-full bg-red-500 text-white hover:bg-red-600 transition"
+                        >
+                          CANCEL
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="text-right">
@@ -192,7 +237,7 @@ export default function MyOrdersPage() {
                 </div>
 
                 {/* Progress Bar */}
-                {isExpanded && (
+                {isExpanded && order.status !== "cancelled" && (
                   <div className="mt-4">
                     <div className="relative w-full h-2 bg-green-100 rounded-full my-3">
                       <div
@@ -200,7 +245,10 @@ export default function MyOrdersPage() {
                           order.status
                         )}`}
                         style={{
-                          width: `${((currentStep + 1) / statuses.length) * 100}%`,
+                          width: `${
+                            ((currentStep + 1) / statuses.length) *
+                            100
+                          }%`,
                         }}
                       ></div>
                     </div>
@@ -227,7 +275,7 @@ export default function MyOrdersPage() {
                   {order.items.map((item) => (
                     <div
                       key={item.id}
-                      className="flex flex-col sm:flex-row items-center sm:items-start gap-3 bg-green-50 p-3 rounded-xl"
+                      className="flex flex-col sm:flex-row items-center gap-3 bg-green-50 p-3 rounded-xl"
                     >
                       <Image
                         src={item.image_url}
@@ -237,18 +285,14 @@ export default function MyOrdersPage() {
                         className="w-full sm:w-24 h-24 object-cover rounded-lg border border-green-200"
                       />
 
-                      <div className="flex-1 flex flex-col sm:flex-row justify-between items-center sm:items-start w-full">
-                        <div className="text-center sm:text-left">
-                          <p className="font-medium text-gray-800">{item.name}</p>
-                          {/* <p className="text-gray-600 text-sm">
-                            Qty: {item.quantity} <span>X</span> ₹{item.price}
-                          </p> */}
-                          <p className="font-semibold text-green-700 mt-2 sm:mt-0">
-                          ₹{item.price} <span>X</span>{item.quantity} <span>= </span>₹{item.price * item.quantity}
+                      <div className="flex-1 text-center sm:text-left">
+                        <p className="font-medium text-gray-800">
+                          {item.name}
                         </p>
-                        </div>
-
-                        
+                        <p className="font-semibold text-green-700">
+                          ₹{item.price} × {item.quantity} = ₹
+                          {item.price * item.quantity}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -262,9 +306,13 @@ export default function MyOrdersPage() {
                     </p>
                     <ul className="list-disc list-inside space-y-1">
                       <li>{order.address.name}</li>
-                      <li>{order.address.address_line ?? order.address.address}</li>
                       <li>
-                        {order.address.city} - {order.address.postal_code}
+                        {order.address.address_line ??
+                          order.address.address}
+                      </li>
+                      <li>
+                        {order.address.city} -{" "}
+                        {order.address.postal_code}
                       </li>
                       <li>{order.address.phone}</li>
                     </ul>
@@ -274,7 +322,9 @@ export default function MyOrdersPage() {
                 {/* Ordered On */}
                 <div className="mt-3 text-right text-xs text-gray-500">
                   Ordered on:{" "}
-                  {new Date(order.created_at).toLocaleString("en-IN")}
+                  {new Date(order.created_at).toLocaleString(
+                    "en-IN"
+                  )}
                 </div>
               </div>
             );

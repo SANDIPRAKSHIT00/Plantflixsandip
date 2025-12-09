@@ -410,8 +410,9 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
-                    {item.name}
+                  <h3 className="flex items-center justify-between font-semibold text-lg text-gray-800 dark:text-gray-200">
+                    <span>{item.name}</span>
+                    <span className="text-sm text-green-600 dark:text-green-400">Price: {item.price * item.quantity}</span>
                   </h3>
                   <div className="flex items-center gap-3 mt-2">
                     <button
@@ -435,7 +436,8 @@ export default function CheckoutPage() {
                     </button>
                   </div>
                   <p className="text-green-700 dark:text-green-400 font-medium mt-2">
-                    ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity}
+                    {/* ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity} */}
+                    ₹{item.price}
                   </p>
                 </div>
               </div>
